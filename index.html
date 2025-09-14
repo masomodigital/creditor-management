@@ -169,13 +169,18 @@
     document.getElementById('tableMsg').innerHTML = '<span class="wait">Wait please...</span>';
     const rows = await callAPI("getCreditorsForUser", { userID: currentUser.userID });
     renderCreditors(rows);
-    const summary = await callAPI("getSummaryForUser", { userID: currentUser.userID });
+    const summary = await callAPI("getCreditorSummary", { userID: currentUser.userID });
     renderSummary(summary);
   }
 
   function renderSummary(s) {
+    if (!s) {
+      document.getElementById('totalCreditors').textContent = 0;
+      document.getElementById('totalAmount').textContent = 0;
+      return;
+    }
     document.getElementById('totalCreditors').textContent = s.totalCreditors || 0;
-    document.getElementById('totalAmount').textContent = s.totalAmount || 0;
+    document.getElementById('totalAmount').textContent = s.totalUnpaid || 0;
   }
 
   function renderCreditors(rows) {
